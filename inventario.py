@@ -33,3 +33,34 @@ def vaciar_inventario(inventario):
         soltar_objeto(inventario, inventario[0])
     print("Tu inventario se ha vaciado completamente.")
 
+"""Mostrar el objeto mas repetido en la mochila"""
+def objeto_mas_repetido(inventario):
+    if not inventario:
+        return None
+    mas_repetido = None
+    max_count = 0
+    for item in inventario:
+        conteo = contar_objetos(inventario, item)
+        if conteo > max_count:
+            max_count = conteo
+            mas_repetido = item
+    return mas_repetido
+
+"""Reemplazar un objeto en la mochila"""
+def reemplazar_objeto(inventario, item_viejo, item_nuevo):
+    if item_viejo not in inventario:
+        print(f"No tienes '{item_viejo}' en tu mochila para reemplazarlo.")
+        return False
+    soltar_objeto(inventario, item_viejo)
+    agregar_objeto(inventario, item_nuevo)
+    print(f"Has reemplazado '{item_viejo}' por '{item_nuevo}'.")
+    return True
+"""Funcion para mostrar el inventario"""
+def mostrar_inventario(inventario):
+    print("Tus juguetes")
+    if not inventario:
+        print("Tu mochila está vacía.")
+    else:
+        print("Tienes: ")
+        for item in inventario:
+            print(f"- {item}")
