@@ -1,13 +1,13 @@
 """Funcion para agregar los objetos a la mochila"""
 def agregar_objeto(inventario, item):
     inventario.append(item)
-    print("Obtuviste un'{item}'!")
+    print(f"Obtuviste un'{item}'!")
 
 """Funcion para soltar los objetos de la mochila con .remove"""
 def soltar_objeto(inventario, item):
     if item in inventario:
         inventario.remove(item)
-        print("Soltaste '{item}'")
+        print(f"Soltaste '{item}'")
         return True
     else:
         print("No tienes '{item}' en tu mochila")
@@ -17,10 +17,10 @@ def soltar_objeto(inventario, item):
 def usar_objeto(inventario, item):
     if item in inventario:
         inventario.remove(item)
-        print("Usaste '{item}'")
+        print(f"Usaste '{item}'")
         return True
     else:
-        print("No puedes usar '{item}', no está en tu mochila")
+        print(f"No puedes usar '{item}', no está en tu mochila")
         return False
     
 """Funcion para contar los objetos en la mochila"""
@@ -61,6 +61,5 @@ def mostrar_inventario(inventario):
     if not inventario:
         print("Tu mochila está vacía.")
     else:
-        print("Tienes: ")
         for item in inventario:
             print(f"- {item}")
