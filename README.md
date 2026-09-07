@@ -18,10 +18,8 @@ CatVideogame/
 ├── juegogato.drawio.png   # Diagrama de flujo
 └── README.md              # Documentación en formato Markdown
 ```
-### Diagrama 
 <img width="577" height="1107" alt="juegogato drawio" src="https://github.com/user-attachments/assets/786eab2d-8aea-4d71-9ec4-7c6fd5df404f" />
 
-### Pseudocódigo 
 ```text
 Algoritmo CombateYEscapeAutomatico
 	Definir enemigosDerrotados, vidaJugador, vidaEnemigo Como Entero
