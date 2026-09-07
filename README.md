@@ -3,7 +3,6 @@ PBL de estructura de datos
 
 # Aventura en el Bosque Encantado
 
-## 1. Concepto del Juego
 * **Mundo:** Bosque encantado.
 * **Protagonista:** Un gato.
 * **Antagonista:** Fantasma.
@@ -11,8 +10,6 @@ PBL de estructura de datos
 * **Problema a Resolver:** Vencer al fantasma y a sus esbirros para que la familia del gato y él puedan vivir en paz.
 
 ---
-
-## 2. Estructura del Proyecto
 **Repositorio:** [https://github.com/reinaromero02/CatVideogame.git](https://github.com/reinaromero02/CatVideogame.git)
 ```text
 CatVideogame/
@@ -21,8 +18,7 @@ CatVideogame/
 ├── juegogato.drawio.png   # Diagrama de flujo
 └── README.md              # Documentación en formato Markdown
 ```
-## 3. Mecánica de ataque y combate
-### Diagrama de Flujo
+### Diagrama 
 <img width="577" height="1107" alt="juegogato drawio" src="https://github.com/user-attachments/assets/786eab2d-8aea-4d71-9ec4-7c6fd5df404f" />
 
 ### Pseudocódigo 
