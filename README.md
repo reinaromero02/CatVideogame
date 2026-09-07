@@ -78,3 +78,6 @@ Algoritmo CombateYEscapeAutomatico
 	FinMientras
 FinAlgoritmo
 ```
+# Explicación breve: 
+```text
+Para esta primera entrega desarrollamos la mecánica de combate y escape del videojuego "CatVideogame". Tomamos la decisión de implementar un sistema secuencial en el cual el jugador debe enfrentarse a cuatro enemigos consecutivos utilizando estructuras de control condicionales, la lógica de los ataques y el cálculo de daño se basaron en probabilidades aleatorias para brindarle dinamismo al juego. Asimismo, definimos que la derrota del cuarto enemigo active de manera automática la entrega de la llave de salida, cumpliendo así la condición de victoria y escape del gatito.
