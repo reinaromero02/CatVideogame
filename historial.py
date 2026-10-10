@@ -6,7 +6,7 @@ def describir_accion(accion):
         return f"Recogiste '{accion['objeto']}' en {accion['sala']['nombre']}"
     return f"Acción: {accion['tipo']}"
 
- """registra otra accio con append"""
+"""registra otra accio con append"""
 def apilar_accion(historial, tipo, **datos):
    
     accion = {"tipo": tipo}
