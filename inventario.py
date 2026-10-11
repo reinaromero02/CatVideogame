@@ -10,7 +10,7 @@ def soltar_objeto(inventario, item):
         print(f"Soltaste '{item}'")
         return True
     else:
-        print("No tienes '{item}' en tu mochila")
+        print(f"No tienes '{item}' en tu mochila")
         return False
 
 """Funcion para usar un objeto y eliminarlo de la mochila"""
