@@ -226,7 +226,6 @@ Todo el estado de la partida (sala actual, historial, cola de eventos, turnos e 
 **Decisión: el evento se pierde.** Cuando el jugador deshace un movimiento vuelve a la sala anterior, pero el evento que se disparó con ese movimiento **no vuelve a la cola**.
 
 **Por qué:**
-* El evento ya ocurrió y tuvo efecto sobre el juego (por ejemplo, un enemigo ya consumió un juguete del inventario). Devolverlo a la cola obligaría a revertir también sus efectos.
 * Mantiene sencilla la relación entre las dos estructuras: la pila deshace la **posición** del jugador y la cola solo avanza hacia adelante.
 * Tiene sentido narrativo: el tiempo en el bosque sigue corriendo aunque el gato retroceda.
 
@@ -406,10 +405,10 @@ Usaste 'Llave de salida'
 
 | Integrante | Aporte |
 |---|---|
-| (Nombre 1) | (por ejemplo: `historial.py`, pila y Guía 5) |
-| (Nombre 2) | (por ejemplo: `eventos.py`, cola, turnos y Guía 6) |
-| (Nombre 3) | (por ejemplo: `mazmorra.py`, recursividad y Guía 7) |
-| (Nombre 4) | (por ejemplo: `main.py`, integración, README y pruebas de casos límite) |
+| (Camila Julian) | (`historial.py`, pila) |
+| (Reina Romero) | (`eventos.py`, cola, turnos) |
+| (Andrea Lopez y Camila Peñate) | (`mazmorra.py`, recursividad) |
+| (Camila Peñate) | (`main.py`, integración, README y pruebas de casos límite) |
 
 ---
 
