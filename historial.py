@@ -55,3 +55,9 @@ def invertir_historial(historial):
     while len(historial) > 0:
         auxiliar.append(historial.pop())
     return auxiliar
+def mostrar_historial(historial):
+    if len(historial) == 0:
+        print("El historial está vacío.")
+        return
+    for numero, accion in enumerate(reversed(historial), start=1):
+        print(f"{numero}. {describir_accion(accion)}")
