@@ -58,3 +58,42 @@ def fue_recogido(mundo, objeto):
     """Dice si el jugador ya recogió ese objeto alguna vez."""
     return mundo.get(("recogido", objeto), False)
 
+
+def sumar_puntos(mundo, cantidad):
+    """Suma puntos al marcador del mundo."""
+    mundo[("puntos", "total")] = mundo.get(("puntos", "total"), 0) + cantidad
+
+
+def salas_visitadas(mundo):
+    """Filtra el diccionario: lista de salas que el jugador ya visitó."""
+    return [clave[1] for clave, veces in mundo.items()
+            if clave[0] == "visitas" and veces > 0]
+
+
+def salas_bloqueadas(mundo):
+    """Filtra el diccionario: conjunto de salas bloqueadas (se pasa a BFS y DFS)."""
+    return {clave[1] for clave in mundo if clave[0] == "bloqueada"}
+
+
+def objetos_pendientes(mundo):
+    """Filtra el diccionario: {sala: objeto} de lo que aún no se ha recogido."""
+    return {clave[1]: objeto for clave, objeto in mundo.items() if clave[0] == "objeto"}
+
+
+def resumen_mundo(mundo):
+    """Muestra un resumen del estado del mundo."""
+    visitadas = salas_visitadas(mundo)
+    bloqueadas = salas_bloqueadas(mundo)
+    pendientes = objetos_pendientes(mundo)
+    print(f"Salas visitadas ({len(visitadas)}): {', '.join(visitadas)}")
+    if bloqueadas:
+        detalle = ", ".join(f"{s} ({mundo[('bloqueada', s)]})" for s in bloqueadas)
+        print(f"Salas bloqueadas: {detalle}")
+    else:
+        print("Salas bloqueadas: ninguna")
+    if pendientes:
+        detalle = ", ".join(f"{o} en {s}" for s, o in pendientes.items())
+        print(f"Objetos por recoger: {detalle}")
+    else:
+        print("Objetos por recoger: ninguno")
+    print(f"Puntos: {mundo.get(('puntos', 'total'), 0)}")
