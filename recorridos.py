@@ -30,3 +30,21 @@ def ruta_mas_corta(grafo, inicio, destino, bloqueados=()):
         nodo = padres[nodo]
     ruta.reverse()
     return rutas
+
+def dfs(grafo, inicio, bloqueados=(), visitados=None):
+    """DFS recursivo: devuelve los nodos alcanzables desde 'inicio', en orden de visita."""
+    if visitados is None:
+        visitados = {}
+    if not grafo.existe(inicio) or inicio in bloqueados:
+        return list(visitados)
+    visitados[inicio] = True
+    for vecino in grafo.vecinos(inicio):
+        if vecino not in visitados and vecino not in bloqueados:
+            dfs(grafo, vecino, bloqueados, visitados)
+    return list(visitados)
+
+
+def zonas_aisladas(grafo, inicio, bloqueados=()):
+    """Nodos a los que NO se puede llegar desde 'inicio' (usa DFS)."""
+    alcanzables = dfs(grafo, inicio, bloqueados)
+    return [nodo for nodo in grafo.adyacencia if nodo not in alcanzables]
