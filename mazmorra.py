@@ -1,3 +1,6 @@
+from grafo import Grafo
+
+
 NOMBRES_SALAS = [
     "Claro Encantado",
     "Sendero de Hongos",
@@ -54,3 +57,34 @@ def mostrar_arbol(sala, nivel=0):
     print("    " * nivel + "- " + sala["nombre"] + marca)
     for hijo in sala["hijos"]:
         mostrar_arbol(hijo, nivel + 1)
+
+CLARO, SENDERO, ARROYO, CUEVA, ARBOL, COLINA, GUARIDA = NOMBRES_SALAS
+
+ATAJOS = [(CUEVA, COLINA), (ARROYO, GUARIDA)]
+
+
+def indexar_salas(sala, indice=None):
+    """Crea un diccionario {nombre: sala} recorriendo el árbol de forma recursiva."""
+    if indice is None:
+        indice = {}
+    indice[sala["nombre"]] = sala
+    for hijo in sala["hijos"]:
+        indexar_salas(hijo, indice)
+    return indice
+
+
+def construir_grafo(raiz, grafo=None):
+    """Convierte el árbol de salas en un Grafo (cada sala conectada con sus hijos)."""
+    if grafo is None:
+        grafo = Grafo()
+    grafo.agregar_nodo(raiz["nombre"])
+    for hijo in raiz["hijos"]:
+        grafo.agregar_arista(raiz["nombre"], hijo["nombre"])
+        construir_grafo(hijo, grafo)
+    return grafo
+
+
+def agregar_atajos(grafo, atajos):
+    """Agrega aristas extra al grafo: así el mapa tiene caminos alternativos (ciclos)."""
+    for a, b in atajos:
+        grafo.agregar_arista(a, b)
