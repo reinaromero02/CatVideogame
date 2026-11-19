@@ -486,3 +486,21 @@ Usaste 'Llave de salida'
 
 <img width="577" height="1107" alt="juegogato drawio" src="https://github.com/user-attachments/assets/786eab2d-8aea-4d71-9ec4-7c6fd5df404f" />
 
+
+## Grafos: el mapa del bosque (`grafo.py`, `recorridos.py`)
+
+**Qué parte del juego resuelve:** el mapa. La mazmorra del Checkpoint 2 es un árbol, y le agregamos 2 atajos (Cueva del Murciélago con Colina de la Luna, y Arroyo de Luciérnagas con Guarida del Fantasma) para que el mapa tenga ciclos y caminos alternativos. El jugador se mueve por los vecinos del grafo. BFS calcula la ruta con menos saltos entre dos salas (menú "Ruta más corta") y DFS dice qué salas se pueden alcanzar y cuáles quedan aisladas (menú "Zonas alcanzables"). Los dos evitan las salas bloqueadas del diccionario del mundo.
+
+**Por qué esta estructura:**
+* La clase `Grafo` es genérica (guarda cualquier tipo de nodo) y no depende de un solo mapa. Usa una lista de adyacencia (un diccionario `{nodo: [vecinos]}`) porque el mapa tiene pocas conexiones comparadas con todas las posibles, y la lista ocupa O(V + E) frente a O(V²) de una matriz.
+* BFS usa una fila (`deque`) y visita por capas, así que garantiza llegar por el camino con menos saltos.
+* DFS es recursivo y baja por un camino hasta el fondo antes de retroceder. No garantiza el camino más corto, pero basta para saber qué se puede alcanzar.
+
+**Complejidad:**
+
+| Operación | Complejidad |
+|---|---|
+| BFS y DFS | O(V + E) |
+| `ruta_mas_corta` | O(V + E) |
+| `vecinos` | O(1) |
+| `agregar_arista` | O(d), con d = grado del nodo (muy pequeño en este mapa) |
