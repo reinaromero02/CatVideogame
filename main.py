@@ -72,9 +72,9 @@ def mostrar_menu(estado):
     proximo = ver_siguiente_evento(estado["eventos"])
     if proximo:
         print(f"Próximo evento en la cola: {proximo['tipo']}")
-    print("1. Moverse  2. Ver inventario  3. Deshacer  4. Ver historial")
-    print("5. Ver turnos  6. Recoger objeto  7. Combate final  8. Salir")
-
+    for numero, (texto, _) in enumerate(OPCIONES, start=1):
+        print(f"{numero}. {texto}")
+    print(f"{len(OPCIONES) + 1}. Salir")
 
 def mover(estado):
     """Mueve al jugador, lo registra en el historial y dispara el siguiente evento."""
@@ -150,6 +150,40 @@ def combate_final(inventario_jugador):
     usar_objeto(inventario_jugador, "Llave de salida")
     print("¡Venciste al fantasma!")
 
+def opcion_inventario(estado):
+    """Muestra el inventario del jugador."""
+    mostrar_inventario(estado["inventario"])
+
+
+def opcion_historial(estado):
+    """Muestra el historial de acciones."""
+    mostrar_historial(estado["historial"])
+
+
+def opcion_turnos(estado):
+    """Ejecuta un turno completo del sistema de turnos."""
+    simular_turnos(estado["turnos"], len(estado["turnos"]))
+
+
+def opcion_combate(estado):
+    """Combate final: solo en las salas más profundas. Devuelve True si el juego termina."""
+    if estado["sala"]["profundidad"] < calcular_profundidad(estado["raiz"]):
+        print("El fantasma solo aparece en las salas más profundas del bosque.")
+        return False
+    combate_final(estado["inventario"])
+    return True
+
+
+OPCIONES = [
+    ("Moverse", mover),
+    ("Ver inventario", opcion_inventario),
+    ("Deshacer", deshacer),
+    ("Ver historial", opcion_historial),
+    ("Ver turnos", opcion_turnos),
+    ("Recoger objeto", recoger),
+    ("Combate final", opcion_combate),
+]
+
 
 def simular_juego():
     print("")
@@ -175,27 +209,13 @@ def simular_juego():
 
     while True:
         mostrar_menu(estado)
-        opcion = leer_opcion("Opción: ", 1, 8)
-        if opcion == 1:
-            mover(estado)
-        elif opcion == 2:
-            mostrar_inventario(estado["inventario"])
-        elif opcion == 3:
-            deshacer(estado)
-        elif opcion == 4:
-            mostrar_historial(estado["historial"])
-        elif opcion == 5:
-            simular_turnos(estado["turnos"], len(estado["turnos"]))
-        elif opcion == 6:
-            recoger(estado)
-        elif opcion == 7:
-            if estado["sala"]["profundidad"] < profundidad:
-                print("El fantasma solo aparece en las salas más profundas del bosque.")
-            else:
-                combate_final(estado["inventario"])
-                break
-        else:
+        salir = len(OPCIONES) + 1
+        opcion = leer_opcion("Opción: ", 1, salir)
+        if opcion == salir:
             print("¡Gracias por jugar!")
+            break
+        terminar = OPCIONES[opcion - 1][1](estado)
+        if terminar:
             break
 
 if __name__ == "__main__":
