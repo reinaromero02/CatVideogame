@@ -17,11 +17,16 @@ from eventos import (
 )
 from mazmorra import (
     NOMBRES_SALAS,
+    ATAJOS,
     generar_mazmorra,
     contar_salas,
     calcular_profundidad,
     marcar_salas_profundas,
+    indexar_salas,
+    construir_grafo,
+    agregar_atajos,
 )
+from recorridos import ruta_mas_corta, dfs, zonas_aisladas
 
 def leer_opcion(mensaje, minimo, maximo):
     while True:
@@ -38,20 +43,23 @@ def leer_opcion(mensaje, minimo, maximo):
 
 
 def crear_estado(inventario_jugador):
-    """Crea la mazmorra, la cola de eventos y los turnos de la partida."""
+    """Crea la mazmorra, el grafo del mapa, la cola de eventos y los turnos de la partida."""
     raiz = generar_mazmorra(list(NOMBRES_SALAS))
     marcar_salas_profundas(raiz, ["Bomba de Catnip", "Ovillo de Lana"], 2)
+    grafo = construir_grafo(raiz)
+    agregar_atajos(grafo, ATAJOS)
     eventos = deque()
     cargar_eventos_iniciales(eventos)
     return {
         "raiz": raiz,
+        "indice": indexar_salas(raiz),
+        "grafo": grafo,
         "sala": raiz,
         "historial": [],
         "eventos": eventos,
         "turnos": deque(["Gato", "Esbirro", "Fantasma"]),
         "inventario": inventario_jugador,
     }
-
 
 def manejar_evento(estado, evento):
     """Aplica el efecto de un evento sobre el inventario del jugador."""
@@ -75,6 +83,7 @@ def mostrar_menu(estado):
     for numero, (texto, _) in enumerate(OPCIONES, start=1):
         print(f"{numero}. {texto}")
     print(f"{len(OPCIONES) + 1}. Salir")
+
 
 def mover(estado):
     """Mueve al jugador, lo registra en el historial y dispara el siguiente evento."""
@@ -150,6 +159,35 @@ def combate_final(inventario_jugador):
     usar_objeto(inventario_jugador, "Llave de salida")
     print("¡Venciste al fantasma!")
 
+def mostrar_ruta(estado):
+    """Usa BFS para mostrar la ruta con menos saltos hasta una sala."""
+    nombres = list(estado["grafo"].adyacencia)
+    for i, nombre in enumerate(nombres, start=1):
+        print(f"{i}) {nombre}")
+    eleccion = leer_opcion("¿A qué sala quieres ir? ", 1, len(nombres))
+    destino = nombres[eleccion - 1]
+    origen = estado["sala"]["nombre"]
+    if destino == origen:
+        print("Ya estás en esa sala.")
+        return
+    ruta = ruta_mas_corta(estado["grafo"], origen, destino)
+    if ruta is None:
+        print("No hay ruta posible hasta esa sala.")
+    else:
+        saltos = len(ruta) - 1
+        print(f"Ruta ({saltos} salto{'s' if saltos != 1 else ''}): " + " -> ".join(ruta))
+
+def mostrar_zonas(estado):
+    """Usa DFS para mostrar qué salas se pueden alcanzar y cuáles quedan aisladas."""
+    origen = estado["sala"]["nombre"]
+    alcanzables = dfs(estado["grafo"], origen)
+    aisladas = zonas_aisladas(estado["grafo"], origen)
+    print(f"Alcanzables desde {origen}: {', '.join(alcanzables)}")
+    if aisladas:
+        print(f"Aisladas o bloqueadas: {', '.join(aisladas)}")
+    else:
+        print("No hay salas aisladas.")
+
 def opcion_inventario(estado):
     """Muestra el inventario del jugador."""
     mostrar_inventario(estado["inventario"])
@@ -181,6 +219,8 @@ OPCIONES = [
     ("Ver historial", opcion_historial),
     ("Ver turnos", opcion_turnos),
     ("Recoger objeto", recoger),
+    ("Ruta más corta", mostrar_ruta),
+    ("Zonas alcanzables", mostrar_zonas),
     ("Combate final", opcion_combate),
 ]
 
