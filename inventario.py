@@ -1,7 +1,7 @@
 """Funcion para agregar los objetos a la mochila"""
 def agregar_objeto(inventario, item):
     inventario.append(item)
-    print(f"Obtuviste un'{item}'!")
+    print(f"Obtuviste '{item}'!")
 
 """Funcion para soltar los objetos de la mochila con .remove"""
 def soltar_objeto(inventario, item):
@@ -10,7 +10,7 @@ def soltar_objeto(inventario, item):
         print(f"Soltaste '{item}'")
         return True
     else:
-        print("No tienes '{item}' en tu mochila")
+        print(f"No tienes '{item}' en tu mochila")
         return False
 
 """Funcion para usar un objeto y eliminarlo de la mochila"""
