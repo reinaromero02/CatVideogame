@@ -73,7 +73,7 @@ def crear_estado(inventario_jugador):
     }
 
 def manejar_evento(estado, evento):
-    """Aplica el efecto de un evento sobre el inventario del jugador."""
+    """Aplica el efecto de un evento sobre el inventario y sobre el mundo."""
     if evento is None:
         return
     if evento["tipo"] == "enemigo":
@@ -83,7 +83,11 @@ def manejar_evento(estado, evento):
             usar_objeto(estado["inventario"], "Espada de Juguete")
         else:
             print("No tienes juguetes: te defiendes con las garras.")
-
+    elif evento["tipo"] == "cofre":
+        sala = estado["sala"]["nombre"]
+        if objeto_en_sala(estado["mundo"], sala) is None:
+            colocar_objeto(estado["mundo"], sala, "Ratón de Juguete")
+            print("Hay un 'Ratón de Juguete' en esta sala. ¡Puedes recogerlo!")
 
 def mostrar_menu(estado):
     """Muestra la sala actual, el próximo evento y las opciones del menú."""

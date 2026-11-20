@@ -45,7 +45,7 @@ def cargar_eventos_iniciales(cola_eventos):
 
     encolar_evento(cola_eventos, "enemigo", "un esbirro fantasma te bloquea el paso")
     encolar_evento(cola_eventos, "mensaje", "oyes un maullido lejano")
-    encolar_evento(cola_eventos, "cofre", "encuentras un cofre con un ovillo de lana")
+    encolar_evento(cola_eventos, "cofre", "encuentras un cofre con un raton de juguete")
     encolar_evento(cola_eventos, "trampa", "pisas una telaraña pegajosa")
     encolar_evento(cola_eventos, "enemigo", "un murciélago fantasma te ataca")
 """"""
