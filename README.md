@@ -504,3 +504,23 @@ Usaste 'Llave de salida'
 | `ruta_mas_corta` | O(V + E) |
 | `vecinos` | O(1) |
 | `agregar_arista` | O(d), con d = grado del nodo (muy pequeño en este mapa) |
+
+## Diccionarios: el estado del mundo (`estado_mundo.py`)
+
+**Qué parte del juego resuelve:** lo que cambia mientras se juega y el juego necesita consultar rápido: qué salas están bloqueadas y por qué, qué objeto hay en cada sala, cuántas veces se visitó cada sala, qué objetos ya se recogieron y los puntos. Los objetos de las salas viven en este diccionario (ya no dentro de la sala).
+
+**Cómo está hecho:** las claves son tuplas `(tipo, nombre)`, por ejemplo `("objeto", "Arroyo de Luciérnagas")`, `("bloqueada", "Árbol Hueco")` o `("visitas", "Claro Encantado")`. Son únicas e inmutables, y nunca usamos una lista como clave. El valor es lo que va cambiando.
+
+| Operación | Función |
+|---|---|
+| Consulta con `.get()` | `objeto_en_sala`, `motivo_bloqueo`, `fue_recogido` |
+| Actualización | `registrar_visita`, `sumar_puntos` |
+| Inserción | `colocar_objeto` (por ejemplo, el evento de cofre) |
+| Eliminación | `quitar_objeto` (al recoger), `desbloquear` |
+| Filtran o resumen | `salas_visitadas`, `salas_bloqueadas`, `objetos_pendientes`, `resumen_mundo` |
+
+**Por qué esta estructura:** buscar por clave en un diccionario es O(1) en promedio, mientras que buscar en una lista es O(n). Además `.get()`, `in` y `pop` con valor por defecto evitan el `KeyError` cuando se consulta algo que no existe.
+
+**Trabaja con las otras estructuras:** `salas_bloqueadas` se le pasa a BFS y DFS para que eviten esas salas, y completar una misión del árbol puede eliminar un bloqueo.
+
+**Complejidad:** `get`, insertar y eliminar son O(1) en promedio. Las funciones que filtran recorren las k claves del diccionario: O(k).
