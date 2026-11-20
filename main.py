@@ -28,6 +28,14 @@ from mazmorra import (
 )
 from recorridos import ruta_mas_corta, dfs, zonas_aisladas
 
+from estado_mundo import (
+    crear_mundo,
+    registrar_visita,
+    objeto_en_sala,
+    colocar_objeto,
+    quitar_objeto,
+    marcar_recogido,
+)
 def leer_opcion(mensaje, minimo, maximo):
     while True:
         texto = input(mensaje).strip()
@@ -41,19 +49,21 @@ def leer_opcion(mensaje, minimo, maximo):
             continue
         return numero
 
-
 def crear_estado(inventario_jugador):
-    """Crea la mazmorra, el grafo del mapa, la cola de eventos y los turnos de la partida."""
+    """Crea la mazmorra, el grafo del mapa, el diccionario del mundo, la cola de eventos y los turnos."""
     raiz = generar_mazmorra(list(NOMBRES_SALAS))
-    marcar_salas_profundas(raiz, ["Bomba de Catnip", "Ovillo de Lana"], 2)
+    marcar_salas_profundas(raiz, ["Bomba de Catnip", "Galleta de Atún", "Ovillo de Lana"], 2)
     grafo = construir_grafo(raiz)
     agregar_atajos(grafo, ATAJOS)
+    mundo = crear_mundo(raiz, {})
+    registrar_visita(mundo, raiz["nombre"])
     eventos = deque()
     cargar_eventos_iniciales(eventos)
     return {
         "raiz": raiz,
         "indice": indexar_salas(raiz),
         "grafo": grafo,
+        "mundo": mundo,
         "sala": raiz,
         "historial": [],
         "eventos": eventos,
@@ -98,6 +108,7 @@ def mover(estado):
 
     apilar_accion(estado["historial"], "mover", origen=sala, destino=destino)
     estado["sala"] = destino
+    registrar_visita(estado["mundo"], destino["nombre"])
     print(f"Te mueves a: {destino['nombre']}")
 
     evento = procesar_siguiente_evento(estado["eventos"])
@@ -105,19 +116,20 @@ def mover(estado):
 
 
 def recoger(estado):
-    """Recoge el objeto de la sala actual y lo guarda en el inventario."""
+    """Recoge el objeto de la sala actual (lo lee del diccionario del mundo) y lo guarda en el inventario."""
     sala = estado["sala"]
-    if sala["objeto"] is None:
+    objeto = objeto_en_sala(estado["mundo"], sala["nombre"])
+    if objeto is None:
         print("No hay nada que recoger aquí.")
         return
-    objeto = sala["objeto"]
     agregar_objeto(estado["inventario"], objeto)
-    sala["objeto"] = None
+    quitar_objeto(estado["mundo"], sala["nombre"])
+    marcar_recogido(estado["mundo"], objeto)
     apilar_accion(estado["historial"], "recoger", objeto=objeto, sala=sala)
 
 
 def deshacer(estado):
-    """Revierte la última acción del historial."""
+    """Revierte la última acción. Si era un 'recoger', el objeto vuelve a la sala en el diccionario."""
     accion = deshacer_ultima_accion(estado["historial"])
     if accion is None:
         return
@@ -126,9 +138,7 @@ def deshacer(estado):
         print(f"Vuelves a: {accion['origen']['nombre']}")
     elif accion["tipo"] == "recoger":
         soltar_objeto(estado["inventario"], accion["objeto"])
-        accion["sala"]["objeto"] = accion["objeto"]
-
-
+        colocar_objeto(estado["mundo"], accion["sala"]["nombre"], accion["objeto"])
 def combate_final(inventario_jugador):
     """Combate del Checkpoint 1: derrotar a los 4 enemigos, tomar la llave y escapar."""
     print("\nINICIO DE COMBATE EN EL BOSQUE")
