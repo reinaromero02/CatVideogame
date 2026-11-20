@@ -36,6 +36,7 @@ from estado_mundo import (
     colocar_objeto,
     quitar_objeto,
     marcar_recogido,
+    resumen_mundo
 )
 def leer_opcion(mensaje, minimo, maximo):
     while True:
@@ -157,7 +158,7 @@ def deshacer(estado):
         soltar_objeto(estado["inventario"], accion["objeto"])
         colocar_objeto(estado["mundo"], accion["sala"]["nombre"], accion["objeto"])
 def combate_final(inventario_jugador):
-    """Combate del Checkpoint 1: derrotar a los 4 enemigos, tomar la llave y escapar."""
+    print("Estado del mundo", opcion_estado_mundo),
     print("\nINICIO DE COMBATE EN EL BOSQUE")
     enemigos_derrotados = 0
     
@@ -216,6 +217,10 @@ def mostrar_zonas(estado):
         print(f"Aisladas o bloqueadas: {', '.join(aisladas)}")
     else:
         print("No hay salas aisladas.")
+
+def opcion_estado_mundo(estado):
+    """Muestra el resumen del estado del mundo (diccionario)."""
+    resumen_mundo(estado["mundo"])
 
 def opcion_inventario(estado):
     """Muestra el inventario del jugador."""
