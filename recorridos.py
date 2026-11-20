@@ -29,7 +29,7 @@ def ruta_mas_corta(grafo, inicio, destino, bloqueados=()):
         ruta.append(nodo)
         nodo = padres[nodo]
     ruta.reverse()
-    return rutas
+    return ruta
 
 def dfs(grafo, inicio, bloqueados=(), visitados=None):
     """DFS recursivo: devuelve los nodos alcanzables desde 'inicio', en orden de visita."""
