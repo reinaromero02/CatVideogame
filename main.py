@@ -25,6 +25,7 @@ from mazmorra import (
     indexar_salas,
     construir_grafo,
     agregar_atajos,
+    ARBOL
 )
 from recorridos import ruta_mas_corta, dfs, zonas_aisladas
 
@@ -55,7 +56,7 @@ def crear_estado(inventario_jugador):
     marcar_salas_profundas(raiz, ["Bomba de Catnip", "Galleta de Atún", "Ovillo de Lana"], 2)
     grafo = construir_grafo(raiz)
     agregar_atajos(grafo, ATAJOS)
-    mundo = crear_mundo(raiz, {})
+    mundo = crear_mundo(raiz, {ARBOL: "un árbol caído tapa el camino"})
     registrar_visita(mundo, raiz["nombre"])
     eventos = deque()
     cargar_eventos_iniciales(eventos)
@@ -96,24 +97,36 @@ def mostrar_menu(estado):
 
 
 def mover(estado):
-    """Mueve al jugador, lo registra en el historial y dispara el siguiente evento."""
+    """Mueve al jugador por las conexiones del grafo, registra el movimiento y dispara el siguiente evento."""
     sala = estado["sala"]
-    if not sala["hijos"]:
+    vecinos = estado["grafo"].vecinos(sala["nombre"])
+    if len(vecinos) == 0:
         print("No hay salas conectadas desde aquí.")
         return
-    opciones = "  ".join(f"{i}) {h['nombre']}" for i, h in enumerate(sala["hijos"], start=1))
-    print("Salas conectadas: " + opciones)
-    eleccion = leer_opcion("Elige una sala: ", 1, len(sala["hijos"]))
-    destino = sala["hijos"][eleccion - 1]
+    textos = []
+    for i, nombre in enumerate(vecinos, start=1):
+        motivo = motivo_bloqueo(estado["mundo"], nombre)
+        extra = f" [bloqueada: {motivo}]" if motivo else ""
+        textos.append(f"{i}) {nombre}{extra}")
+    print("Salas conectadas: " + "  ".join(textos))
+    eleccion = leer_opcion("Elige una sala: ", 1, len(vecinos))
+    nombre_destino = vecinos[eleccion - 1]
+    motivo = motivo_bloqueo(estado["mundo"], nombre_destino)
+    if motivo:
+        print(f"No puedes pasar: {motivo}.")
+        return
+    destino = estado["indice"].get(nombre_destino)
+    if destino is None:
+        print("Esa sala no existe en el mapa.")
+        return
 
     apilar_accion(estado["historial"], "mover", origen=sala, destino=destino)
     estado["sala"] = destino
-    registrar_visita(estado["mundo"], destino["nombre"])
-    print(f"Te mueves a: {destino['nombre']}")
+    registrar_visita(estado["mundo"], nombre_destino)
+    print(f"Te mueves a: {nombre_destino}")
 
     evento = procesar_siguiente_evento(estado["eventos"])
     manejar_evento(estado, evento)
-
 
 def recoger(estado):
     """Recoge el objeto de la sala actual (lo lee del diccionario del mundo) y lo guarda en el inventario."""
@@ -170,7 +183,7 @@ def combate_final(inventario_jugador):
     print("¡Venciste al fantasma!")
 
 def mostrar_ruta(estado):
-    """Usa BFS para mostrar la ruta con menos saltos hasta una sala."""
+    """Usa BFS para mostrar la ruta con menos saltos hasta una sala, evitando las bloqueadas."""
     nombres = list(estado["grafo"].adyacencia)
     for i, nombre in enumerate(nombres, start=1):
         print(f"{i}) {nombre}")
@@ -180,18 +193,20 @@ def mostrar_ruta(estado):
     if destino == origen:
         print("Ya estás en esa sala.")
         return
-    ruta = ruta_mas_corta(estado["grafo"], origen, destino)
+    ruta = ruta_mas_corta(estado["grafo"], origen, destino, salas_bloqueadas(estado["mundo"]))
     if ruta is None:
-        print("No hay ruta posible hasta esa sala.")
+        print("No hay ruta posible: el camino está bloqueado.")
     else:
         saltos = len(ruta) - 1
         print(f"Ruta ({saltos} salto{'s' if saltos != 1 else ''}): " + " -> ".join(ruta))
 
+
 def mostrar_zonas(estado):
-    """Usa DFS para mostrar qué salas se pueden alcanzar y cuáles quedan aisladas."""
+    """Usa DFS para mostrar qué salas se pueden alcanzar y cuáles quedan aisladas o bloqueadas."""
+    bloqueadas = salas_bloqueadas(estado["mundo"])
     origen = estado["sala"]["nombre"]
-    alcanzables = dfs(estado["grafo"], origen)
-    aisladas = zonas_aisladas(estado["grafo"], origen)
+    alcanzables = dfs(estado["grafo"], origen, bloqueadas)
+    aisladas = zonas_aisladas(estado["grafo"], origen, bloqueadas)
     print(f"Alcanzables desde {origen}: {', '.join(alcanzables)}")
     if aisladas:
         print(f"Aisladas o bloqueadas: {', '.join(aisladas)}")
