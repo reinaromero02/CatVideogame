@@ -98,7 +98,7 @@ def resumen_mundo(mundo):
         print("Objetos por recoger: ninguno")
     print(f"Puntos: {mundo.get(('puntos', 'total'), 0)}")
 
-def motivo_bloqueo:
+#def motivo_bloqueo: (no se si borrarlas o dejarlo así para despues.)
 
-def salas_bloqueadas:
+#def salas_bloqueadas: (lo mismo.)
      
