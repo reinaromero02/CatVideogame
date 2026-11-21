@@ -92,8 +92,9 @@ python main.py
 4. Ver historial	Muestra las acciones, de la más reciente a la más antigua
 5. Ver turnos	Ejecuta un turno completo del sistema de turnos
 6. Recoger objeto	Recoge el objeto de la sala actual y lo guarda en el inventario
-7. Combate final	Solo en las salas más profundas: enfrentar a los 4 enemigos, tomar la llave y escapar
-8. Salir	Termina la partida
+7. Ver misiones	Muestra el árbol de misiones, lo disponible por etapa y los puntos por rama
+8. Combate final	Solo en la Guarida y si el árbol de misiones lo permite: enfrentar a los 4 enemigos, tomar la llave y escapar
+9. Salir	Termina la partida
 
 
 ## 4. Estructura del Proyecto
@@ -105,6 +106,11 @@ CatVideogame/
 ├── historial.py   # Historial de acciones
 ├── eventos.py     # Eventos y turnos
 ├── mazmorra.py    # Mazmorra 
+├── grafo.py         # Clase Grafo genérica (lista de adyacencia)
+├── recorridos.py    # BFS, DFS, ruta más corta y zonas aisladas
+├── estado_mundo.py  # Diccionario con el estado del mundo
+├── misiones.py    # Árbol de misiones: condiciones, efectos y recorridos
+├── arboles.py     # Nodos y funciones base del árbol
 └── README.md      # Documentación técnica
 ```
 ## 5. Estructura de datos implementados
@@ -247,6 +253,41 @@ Con profundidad máxima 2 y 2 ramas por sala se generan 1 + 2 + 4 = **7 salas**.
 | `marcar_salas_profundas` | Coloca objetos en las salas del nivel más profundo |
 | `mostrar_arbol` | Imprime el árbol con sangría |
 
+### Árboles: el árbol de misiones (`misiones.py`, `arboles.py`)
+**Qué parte del juego resuelve:** las misiones y sus dependencias. Hay 9 misiones y altura 4. Cada misión depende de una sola misión anterior, por eso es un árbol y no un grafo. Una misión solo está disponible si no está completada y su padre sí lo está.
+
+```text
+Despertar en el Claro Encantado
+├── Cruzar el Sendero de Hongos
+│   ├── Recoger la Bomba de Catnip
+│   └── Derrotar al Murciélago Fantasma
+└── Explorar el Árbol Hueco
+    ├── Conseguir el Ovillo de Lana
+    └── Llegar a la Guarida del Fantasma
+        └── Derrotar a los 4 esbirros
+            └── Tomar la llave y escapar
+```
+
+**Completar una misión tiene efecto en la partida:** suma puntos al diccionario del mundo (135 en total si se completan todas) y, en el caso de *Recoger la Bomba de Catnip*, desbloquea el Árbol Hueco (elimina el bloqueo del diccionario del mundo, lo que cambia las rutas de BFS y DFS). Las misiones se completan solas cuando se cumple su condición y su dependencia (`revisar_misiones`), y el combate final solo se permite cuando *Derrotar a los 4 esbirros* está disponible.
+
+**Cómo se conectan las tres estructuras:** el diccionario del mundo (visitas, objetos recogidos, bloqueos) guarda lo que hace el jugador. El árbol de misiones lee ese diccionario para saber qué misiones se cumplieron. Al completarse la misión de la Bomba, el árbol modifica el diccionario (quita el bloqueo) y eso cambia las rutas que calcula el grafo.
+
+**Recorridos y para qué se usan:**
+
+| Recorrido | Uso en el juego |
+|---|---|
+| Preorden | Mostrar el árbol con sangría (menú "Ver misiones") |
+| Por niveles | Listar lo disponible por etapa |
+| Postorden | Sumar los puntos de una rama (primero los hijos, al final el nodo) |
+
+**Por qué esta estructura:** las dependencias entre misiones forman una jerarquía, y un árbol permite saber qué se desbloquea al completar un nodo.
+
+**Complejidad:** cada recorrido es O(n), con n el número de misiones. `completar_mision` es O(n) porque primero busca la misión. `revisar_misiones` hace como máximo n pasadas de O(n), o sea O(n²), que con 9 misiones es despreciable.
+
+**Decisión al deshacer:** las misiones completadas son progreso permanente. Si el jugador deshace un movimiento o un objeto recogido, la misión ya completada no se revierte.
+
+**Aporte de Andrea:** `misiones.py` (recompensas, condiciones, efectos, revisión automática y vista del árbol) y la sección de árboles de este README.
+
 ---
 
 ## 6. Complejidad de las operaciones principales
@@ -262,6 +303,9 @@ Con profundidad máxima 2 y 2 ramas por sala se generan 1 + 2 + 4 = **7 salas**.
 | `contar_acciones_de_tipo`, `contar_eventos_de_tipo` | O(n) | Recorren todos los elementos una vez |
 | `contar_salas`, `calcular_profundidad`, `contar_salas_por_nivel` | O(n) | Visitan cada sala del árbol una sola vez (n = número de salas) |
 | `generar_mazmorra` | O(n²) con lista, O(n) con deque | Hace n llamadas recursivas y cada `nombres.pop(0)` es O(n); con solo 7 salas el costo es despreciable |
+| `puntos_de_rama`, `misiones_por_nivel`, `mostrar_misiones` | O(n) | Recorren cada misión una sola vez (n = número de misiones) |
+| `completar_mision` | O(n) | Primero busca la misión recorriendo el árbol |
+| `revisar_misiones` | O(n²) | Como máximo n pasadas de O(n); con 9 misiones es despreciable |
 
 ---
 
@@ -477,7 +521,7 @@ Usaste 'Llave de salida'
 |---|---|
 | (Camila Julian) | (`historial.py`, pila) |
 | (Reina Romero) | (`eventos.py`, cola, turnos) |
-| (Andrea Lopez y Camila Peñate) | (`mazmorra.py`, recursividad) |
+| (Andrea Lopez y Camila Peñate) | (`mazmorra.py`, recursividad ; `misiones.py`, árbol de misiones) |
 | (Camila Peñate) | (`main.py`, integración, README y pruebas de casos límite) |
 
 ---
