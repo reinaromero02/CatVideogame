@@ -4,7 +4,9 @@
 
 from collections import deque
 
-from estado_mundo import fue_recogido
+from arboles import (preorden, misiones_disponibles, completar_mision,
+                     construir_arbol_misiones)
+from estado_mundo import desbloquear, fue_recogido, sumar_puntos
 from mazmorra import SENDERO, CUEVA, ARBOL, GUARIDA
 
 # Puntos que da cada misión al completarla (suman 135 en total).
@@ -59,3 +61,62 @@ def misiones_por_nivel(raiz):
         for hijo in nodo.hijos:
             cola.append((hijo, nivel + 1))
     return etapas
+
+
+
+# Sala que se desbloquea en el mundo al completar una misión.
+DESBLOQUEOS = {
+    "Recoger la Bomba de Catnip": ARBOL,
+}
+
+
+def aplicar_efecto(estado, nombre):
+    """Aplica el efecto de una misión completada: suma puntos y desbloquea salas."""
+    mundo = estado["mundo"]
+    sumar_puntos(mundo, RECOMPENSAS.get(nombre, 0))
+    sala = DESBLOQUEOS.get(nombre)
+    if sala is not None and desbloquear(mundo, sala):
+        print(f"¡Se desbloquea: {sala}!")
+
+
+def revisar_misiones(estado):
+    """Completa todas las misiones disponibles cuya condición ya se cumple.
+
+    Repite hasta que no cambie nada, porque completar una misión puede
+    dejar disponible a sus hijas. Devuelve cuántas completó.
+    """
+    raiz = estado["misiones"]
+    mundo = estado["mundo"]
+    completadas = 0
+    hubo_cambio = True
+    while hubo_cambio:
+        hubo_cambio = False
+        for nombre in misiones_disponibles(raiz):
+            condicion = CONDICIONES.get(nombre)
+            if condicion is not None and condicion(mundo):
+                if completar_mision(raiz, nombre):
+                    aplicar_efecto(estado, nombre)
+                    completadas += 1
+                    hubo_cambio = True
+    return completadas
+
+
+def mostrar_misiones(estado):
+    """Muestra el árbol (preorden), lo disponible por etapa y los puntos por rama."""
+    raiz = estado["misiones"]
+    print("\n=== ÁRBOL DE MISIONES ===")
+    preorden(raiz)
+    print("\nDisponibles por etapa:")
+    disponibles = misiones_disponibles(raiz)
+    hay_disponibles = False
+    for nivel, nombres in misiones_por_nivel(raiz).items():
+        libres = [n for n in nombres if n in disponibles]
+        if libres:
+            print(f"  Etapa {nivel}: " + ", ".join(libres))
+            hay_disponibles = True
+    if not hay_disponibles:
+        print("  Ninguna: ya completaste todas las misiones.")
+    print("\nPuntos por rama:")
+    for hijo in raiz.hijos:
+        print(f"  {hijo.nombre}: {puntos_de_rama(hijo)} pts")
+    print(f"\nPuntos ganados: {estado['mundo'].get(('puntos', 'total'), 0)}")
