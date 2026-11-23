@@ -738,3 +738,11 @@ Usaste 'Llave de salida'
 ¡Misión completada: Derrotar a los 4 esbirros!
 ¡Misión completada: Tomar la llave y escapar!
 ```
+## Aporte de cada integrante 
+
+| Integrante | Aporte |
+|---|---|
+| Camila Julián | Mapa como grafo: `grafo.py`, BFS y DFS en `recorridos.py`, atajos en la mazmorra |
+| Camila Peñate | Diccionario del estado del mundo: `estado_mundo.py`, objetos en el diccionario, integración en `main.py` |
+| Andrea Lopez | Árbol de misiones: `misiones.py`, `arboles.py`, dependencias, efectos, recorridos y recompensas |
+| Reina Romero | Pruebas automáticas (`pruebas.py`), README, evidencia de ejecución, correcciones y entrega |
