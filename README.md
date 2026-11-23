@@ -634,3 +634,107 @@ Cueva del Murciélago: Sendero de Hongos, Colina de la Luna
 Colina de la Luna: Árbol Hueco, Cueva del Murciélago
 Guarida del Fantasma: Árbol Hueco, Arroyo de Luciérnagas
 ```
+### Evidencia de ejecución 
+
+```text
+AVENTURA EN EL BOSQUE ENCANTADO
+¡Misión completada: Despertar en el Claro Encantado!
+Mazmorra generada: 7 salas, profundidad 2
+Opción: 7
+¿A qué sala quieres ir? 7
+Ruta (3 saltos): Claro Encantado -> Sendero de Hongos -> Arroyo de Luciernagas -> Guarida del Fantasma
+Opción: 8
+Alcanzables desde Claro Encantado: Claro Encantado, Sendero de Hongos, Arroyo de Luciernagas, Guarida del Fantasma, Cueva del Murcielago, Colina de la Luna
+Aisladas o bloqueadas: Arbol Hueco
+Opción: 1
+Salas conectadas: 1) Sendero de Hongos  2) Arbol Hueco [bloqueada: un árbol caído tapa el camino]
+Elige una sala: 2
+No puedes pasar: un árbol caído tapa el camino.
+Opción: 1
+Salas conectadas: 1) Sendero de Hongos  2) Arbol Hueco [bloqueada: un árbol caído tapa el camino]
+Elige una sala: 1
+Te mueves a: Sendero de Hongos
+¡Misión completada: Cruzar el Sendero de Hongos!
+Opción: 1
+Elige una sala: 2
+Te mueves a: Arroyo de Luciernagas
+Opción: 6
+Obtuviste 'Bomba de Catnip'!
+¡Misión completada: Recoger la Bomba de Catnip!
+¡Se desbloquea: Arbol Hueco!
+Opción: 10
+=== ÁRBOL DE MISIONES ===
+[x] Despertar en el Claro Encantado
+    [x] Cruzar el Sendero de Hongos
+        [x] Recoger la Bomba de Catnip
+        [ ] Derrotar al Murciélago Fantasma
+    [ ] Explorar el Árbol Hueco
+        [ ] Conseguir el Ovillo de Lana
+        [ ] Llegar a la Guarida del Fantasma
+            [ ] Derrotar a los 4 esbirros
+                [ ] Tomar la llave y escapar
+Puntos ganados: 30
+Opción: 9
+Puntos: 30
+Opción: 3
+Deshaciendo: Recogiste 'Bomba de Catnip' en Arroyo de Luciernagas
+Soltaste 'Bomba de Catnip'
+Opción: 9
+Puntos: 30
+Opción: abc
+Opcion no valida. Elige un numero del 1 al 12.
+Opción: 0
+Opcion no valida. Elige un numero del 1 al 12.
+Opción: -3
+Opcion no valida. Elige un numero del 1 al 12.
+Opción: 99
+Opcion no valida. Elige un numero del 1 al 12.
+Opción: 3
+Deshaciendo: Te moviste de Sendero de Hongos a Arroyo de Luciernagas
+Vuelves a: Sendero de Hongos
+Opción: 3
+Deshaciendo: Te moviste de Claro Encantado a Sendero de Hongos
+Vuelves a: Claro Encantado
+Opción: 3
+No hay nada que deshacer: el historial está vacío.
+Opción: 11
+El fantasma solo aparece en las salas más profundas del bosque.
+Opción: 1
+Elige una sala: 1
+Te mueves a: Sendero de Hongos
+Opción: 1
+Elige una sala: 2
+Te mueves a: Arroyo de Luciernagas
+Opción: 1
+Elige una sala: 2
+Te mueves a: Guarida del Fantasma
+Opción: 11
+Todavía no puedes enfrentar al fantasma: te faltan misiones por completar (explora el Árbol Hueco).
+Opción: 1
+Elige una sala: 1
+Te mueves a: Arbol Hueco
+¡Misión completada: Explorar el Árbol Hueco!
+¡Misión completada: Llegar a la Guarida del Fantasma!
+Opción: 1
+Elige una sala: 3
+Te mueves a: Guarida del Fantasma
+Opción: 11
+INICIO DE COMBATE EN EL BOSQUE
+¡Combate contra enemigo 1!
+Usaste 'Varita Mágica de Plumas'
+Enemigo 1 derrotado. Total derrotados: 1
+[...]
+¡Combate contra enemigo 4!
+Usaste 'Varita Mágica de Plumas'
+Enemigo 4 derrotado. Total derrotados: 4
+El enemigo 4 suelta la llave, ¡es tu oportunidad!
+Obtuviste 'Llave de salida'!
+Tus juguetes
+- Varita Mágica de Plumas
+- Llave de salida
+Encuentras la salida del bosque encantado. ¡Usa la llave para escapar!
+Usaste 'Llave de salida'
+¡Venciste al fantasma!
+¡Misión completada: Derrotar a los 4 esbirros!
+¡Misión completada: Tomar la llave y escapar!
+```
