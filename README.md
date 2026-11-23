@@ -568,3 +568,40 @@ Usaste 'Llave de salida'
 **Trabaja con las otras estructuras:** `salas_bloqueadas` se le pasa a BFS y DFS para que eviten esas salas, y completar una misión del árbol puede eliminar un bloqueo.
 
 **Complejidad:** `get`, insertar y eliminar son O(1) en promedio. Las funciones que filtran recorren las k claves del diccionario: O(k).
+
+## Checkpoint 3: grafo, árbol de misiones y diccionario de estados
+
+### Cómo ejecutar
+
+Requiere Python 3 y no necesita instalar nada.
+
+```bash
+python main.py       # el juego
+python pruebas.py    # pruebas automáticas de casos límite
+```
+
+### Menú del juego
+
+| Opción | Qué hace |
+|---|---|
+| 1. Moverse | Se mueve por las conexiones del grafo, lo registra en el historial y dispara el siguiente evento |
+| 2. Ver inventario | Muestra los juguetes del gato |
+| 3. Deshacer | Revierte la última acción (posición e inventario) |
+| 4. Ver historial | Acciones de la más reciente a la más antigua |
+| 5. Ver turnos | Un turno completo: Gato, Esbirro y Fantasma |
+| 6. Recoger objeto | Recoge el objeto de la sala (lo toma del diccionario del mundo) |
+| 7. Ruta más corta | BFS: ruta con menos saltos hasta una sala, evitando las bloqueadas |
+| 8. Zonas alcanzables | DFS: salas alcanzables y salas aisladas o bloqueadas |
+| 9. Estado del mundo | Resumen del diccionario: visitas, bloqueos, objetos y puntos |
+| 10. Ver misiones | Árbol de misiones, lo disponible por etapa y puntos por rama |
+| 11. Combate final | Solo en la Guarida y si el árbol de misiones lo permite |
+| 12. Salir | Termina la partida |
+
+### Funcionalidades del juego hasta ahora
+
+* Inventario con listas y combate contra 4 enemigos con llave de salida (Checkpoint 1).
+* Historial con pila para deshacer, eventos y turnos con colas, y mazmorra generada con recursividad (Checkpoint 2).
+* Mapa como grafo con caminos alternativos, rutas con BFS y zonas con DFS.
+* Estado del mundo en un diccionario: salas bloqueadas, objetos, visitas y puntos.
+* Árbol de misiones con dependencias, efectos y recompensas.
+* Casos límite manejados con mensajes claros, sin cerrar el programa.
