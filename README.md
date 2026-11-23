@@ -83,7 +83,7 @@ Para esta primera entrega desarrollamos la mecánica de combate y escape del vid
 ```bash
 python main.py
 ```
-## 3. Menu de la partida
+## Menu de la partida (Checkpoint 2)
 1. Moverse	Elige una sala conectada. Se registra en el historial y dispara el siguiente evento de la cola
 2. Ver inventario	Muestra los juguetes del gato (inventario del Checkpoint 1)
 3. Deshacer	Revierte la última acción del historial (vuelve a la sala anterior)
@@ -360,7 +360,7 @@ El programa nunca se cierra con un error: muestra un mensaje claro y sigue.
 
 ---
 
-## 10. Evidencia de ejecución
+## 10. Evidencia de ejecución (Checkpoint 2
 
 ```text
 
@@ -513,7 +513,7 @@ Usaste 'Llave de salida'
 
 ---
 
-## 11. Aporte de cada integrante
+## 11. Aporte de cada integrante (Checkpoint 2)
 
 | Integrante | Aporte |
 |---|---|
