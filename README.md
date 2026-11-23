@@ -20,7 +20,6 @@ CatVideogame/
 
 ```
 <img width="577" height="1107" alt="juegogato drawio" src="https://github.com/user-attachments/assets/786eab2d-8aea-4d71-9ec4-7c6fd5df404f" />
-<img width="1282" height="445" alt="image" src="https://github.com/user-attachments/assets/7c24a9b6-787f-4557-8258-e35b44d11cd9" />
 ```text
 Algoritmo CombateYEscapeAutomatico
 	Definir enemigosDerrotados, vidaJugador, vidaEnemigo Como Entero
