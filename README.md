@@ -624,6 +624,7 @@ Las estructuras dependen unas de otras:
 ### Dibujos
 
 **Grafo del mapa** 
+<img width="802" height="377" alt="Mapitagrafo drawio" src="https://github.com/user-attachments/assets/24005eae-60a7-414d-9ef2-02377e8567e6" />
 
 ```text
 Claro Encantado: Sendero de Hongos, Árbol Hueco
