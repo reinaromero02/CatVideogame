@@ -36,8 +36,12 @@ from estado_mundo import (
     colocar_objeto,
     quitar_objeto,
     marcar_recogido,
-    resumen_mundo
+    resumen_mundo,
+    motivo_bloqueo,
+    salas_bloqueadas
 )
+from arboles import construir_arbol_misiones, misiones_disponibles
+from misiones import revisar_misiones, mostrar_misiones
 def leer_opcion(mensaje, minimo, maximo):
     while True:
         texto = input(mensaje).strip()
@@ -61,7 +65,7 @@ def crear_estado(inventario_jugador):
     registrar_visita(mundo, raiz["nombre"])
     eventos = deque()
     cargar_eventos_iniciales(eventos)
-    return {
+    estado = {
         "raiz": raiz,
         "indice": indexar_salas(raiz),
         "grafo": grafo,
@@ -71,7 +75,10 @@ def crear_estado(inventario_jugador):
         "eventos": eventos,
         "turnos": deque(["Gato", "Esbirro", "Fantasma"]),
         "inventario": inventario_jugador,
+        "misiones": construir_arbol_misiones(),
     }
+    revisar_misiones(estado)
+    return estado
 
 def manejar_evento(estado, evento):
     """Aplica el efecto de un evento sobre el inventario y sobre el mundo."""
@@ -129,6 +136,7 @@ def mover(estado):
     estado["sala"] = destino
     registrar_visita(estado["mundo"], nombre_destino)
     print(f"Te mueves a: {nombre_destino}")
+    revisar_misiones(estado)
 
     evento = procesar_siguiente_evento(estado["eventos"])
     manejar_evento(estado, evento)
@@ -143,6 +151,7 @@ def recoger(estado):
     agregar_objeto(estado["inventario"], objeto)
     quitar_objeto(estado["mundo"], sala["nombre"])
     marcar_recogido(estado["mundo"], objeto)
+    revisar_misiones(estado)
     apilar_accion(estado["historial"], "recoger", objeto=objeto, sala=sala)
 
 
@@ -158,7 +167,6 @@ def deshacer(estado):
         soltar_objeto(estado["inventario"], accion["objeto"])
         colocar_objeto(estado["mundo"], accion["sala"]["nombre"], accion["objeto"])
 def combate_final(inventario_jugador):
-    print("Estado del mundo", opcion_estado_mundo),
     print("\nINICIO DE COMBATE EN EL BOSQUE")
     enemigos_derrotados = 0
     
@@ -242,7 +250,13 @@ def opcion_combate(estado):
     if estado["sala"]["profundidad"] < calcular_profundidad(estado["raiz"]):
         print("El fantasma solo aparece en las salas más profundas del bosque.")
         return False
+    if "Derrotar a los 4 esbirros" not in misiones_disponibles(estado["misiones"]):
+        print("Todavía no puedes enfrentar al fantasma: te faltan misiones por completar (explora el Árbol Hueco).")
+        return False
     combate_final(estado["inventario"])
+    estado["mundo"][("esbirros", "derrotados")] = 4
+    estado["mundo"][("bosque", "escapaste")] = True
+    revisar_misiones(estado)
     return True
 
 
@@ -255,6 +269,8 @@ OPCIONES = [
     ("Recoger objeto", recoger),
     ("Ruta más corta", mostrar_ruta),
     ("Zonas alcanzables", mostrar_zonas),
+    ("Estado del mundo", opcion_estado_mundo),
+    ("Ver misiones", mostrar_misiones),
     ("Combate final", opcion_combate),
 ]
 
