@@ -17,8 +17,6 @@ CatVideogame/
 ├── inventario.py          # Lista de objetos del jugador
 ├── juegogato.drawio.png   # Diagrama de flujo
 └── README.md              # Documentación en formato Markdown
-```
-<img width="577" height="1107" alt="juegogato drawio" src="https://github.com/user-attachments/assets/786eab2d-8aea-4d71-9ec4-7c6fd5df404f" />
 
 ```text
 Algoritmo CombateYEscapeAutomatico
@@ -605,35 +603,3 @@ python pruebas.py    # pruebas automáticas de casos límite
 * Estado del mundo en un diccionario: salas bloqueadas, objetos, visitas y puntos.
 * Árbol de misiones con dependencias, efectos y recompensas.
 * Casos límite manejados con mensajes claros, sin cerrar el programa.
-
-### Cómo trabajan juntas las tres estructuras
-
-Las estructuras dependen unas de otras:
-
-1. El Árbol Hueco empieza **bloqueado** en el diccionario del mundo (un árbol caído tapa el camino).
-2. El **grafo** lo sabe: moverse no deja entrar, y BFS y DFS evitan esa sala. Por eso la ruta a la Guarida usa el atajo (3 saltos) en vez del camino directo (2 saltos).
-3. Al recoger la Bomba de Catnip se completa la misión del **árbol** *Recoger la Bomba de Catnip*, que **elimina el bloqueo** del diccionario. Desde ese momento la ruta más corta cambia.
-4. Si el jugador llega a la Guarida por el atajo antes de explorar el Árbol Hueco, la misión *Llegar a la Guarida* **espera** (su padre aún no está completado) y se completa en cascada al explorarlo.
-5. El combate final solo se permite si el árbol de misiones lo habilita (*Derrotar a los 4 esbirros* disponible).
-6. El historial (pila) y los eventos (cola) del Checkpoint 2 siguen funcionando: moverse registra la acción y dispara el siguiente evento, y el evento de cofre inserta un objeto en el diccionario.
-
-### Decisión: ¿qué pasa con el estado del mundo al deshacer?
-
-* Deshacer un **movimiento** devuelve al jugador a la sala anterior. Las visitas ya registradas se conservan.
-* Deshacer un **recoger** quita el objeto del inventario y lo **vuelve a poner en la sala** en el diccionario.
-* El **progreso del mundo es permanente**: las misiones completadas, los puntos y los desbloqueos **no se deshacen**. Igual que en el Checkpoint 2, el tiempo del bosque sigue corriendo aunque el gato retroceda: lo que ya ocurrió no se borra, solo cambian la posición y el inventario.
-
-### Dibujos
-
-**Grafo del mapa** 
-
-```text
-Claro Encantado: Sendero de Hongos, Árbol Hueco
-Sendero de Hongos: Claro Encantado, Arroyo de Luciérnagas, Cueva del Murciélago
-Arroyo de Luciérnagas: Sendero de Hongos, Guarida del Fantasma
-Cueva del Murciélago: Sendero de Hongos, Colina de la Luna
-Árbol Hueco: Claro Encantado, Colina de la Luna, Guarida del Fantasma
-Colina de la Luna: Árbol Hueco, Cueva del Murciélago
-Guarida del Fantasma: Árbol Hueco, Arroyo de Luciérnagas
-```
-
