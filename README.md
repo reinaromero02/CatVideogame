@@ -621,9 +621,9 @@ Las estructuras dependen unas de otras:
 * Deshacer un **recoger** quita el objeto del inventario y lo **vuelve a poner en la sala** en el diccionario.
 * El **progreso del mundo es permanente**: las misiones completadas, los puntos y los desbloqueos **no se deshacen**. Igual que en el Checkpoint 2, el tiempo del bosque sigue corriendo aunque el gato retroceda: lo que ya ocurrió no se borra, solo cambian la posición y el inventario.
 
-### Dibujos
+### Dibujos(Grafo del mapa)
 
-**Grafo del mapa** 
+<img width="802" height="377" alt="Mapitagrafo drawio" src="https://github.com/user-attachments/assets/24005eae-60a7-414d-9ef2-02377e8567e6" />
 
 ```text
 Claro Encantado: Sendero de Hongos, Árbol Hueco
